@@ -8,11 +8,20 @@ func (app *application) routes() http.Handler{
 	g:= gin.Default()
 	v1:=g.Group("/api/v1")
 	{
-		v1.POST("/events",app.createEvent)
-		v1.GET("/events",app.getAllEvents)
-		v1.GET("/events/:id",app.getEvent)
-		v1.PUT("/events/:id",app.updateEvent)
-		v1.DELETE("/events/:id",app.deleteEvent)
+		//events
+		v1.POST("/events",app.createEvent)  //Creating a event (require a user)
+		v1.GET("/events",app.getAllEvents) //Print all events
+		v1.GET("/events/:id",app.getEvent) //Print Sepcific Event
+		v1.PUT("/events/:id",app.updateEvent) //Update an event by passing full updated event info
+		v1.DELETE("/events/:id",app.deleteEvent) //delete an event
+		//user
+		v1.POST("/auth/register",app.registerUser) // Register a User and put in user table
+		v1.POST("/user/:id",app.getUser) //Print info of User
+		//attendees
+		v1.POST("/events/:id/attendees/:userid",app.addAttendeeToEvent) //Add attendee in attendees table 
+		v1.DELETE("/events/:id/attendees/:userid",app.deleteAtendeeFromEvent) // Delete an attendee
+		v1.GET("/attendees/:id/events",app.getEventsByAttendee) //Print all events associated with an attendee (taking user id)
+		v1.GET("/events/:id/attendees",app.getAttendeesForEvent) //Print all attendees associated with an event
 	}
 	return g
 }

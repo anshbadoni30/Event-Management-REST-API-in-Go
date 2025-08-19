@@ -6,33 +6,35 @@ import (
 
 	"github.com/anshbadoni30/event-management-app/internal/database"
 	"github.com/anshbadoni30/event-management-app/internal/env"
-	_ "github.com/mattn/go-sqlite3"
 	_ "github.com/joho/godotenv/autoload"
+	_ "github.com/mattn/go-sqlite3"
 )
 
-type application struct{
-	port int
+type application struct {
+	port      int
 	jwtSecret string
-	models database.Models
+	models    database.Models
 }
 
-func main(){
-	db, err:=sql.Open("sqlite3", "./data.db")
+func main() {
+	db, err := sql.Open("sqlite3", "./data.db")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
-
-	models:= database.NewModels(db)
-	app:=application{
-		port: env.GetEnvInt("PORT",8080),
-		jwtSecret: env.GetEnvString("JWT_SECRET","some-seret-123456"),
-		models: models,
+	_, err = db.Exec("PRAGMA foreign_keys = ON")
+	if err != nil {
+		log.Fatal("Failed to enable foreign keys:", err)
 	}
-	er:= app.serve()
-	if er!=nil{
+	models := database.NewModels(db)
+	app := application{
+		port:      env.GetEnvInt("PORT", 8080),
+		jwtSecret: env.GetEnvString("JWT_SECRET", "some-seret-123456"),
+		models:    models,
+	}
+	er := app.serve()
+	if er != nil {
 		log.Fatal(er)
 	}
 
 }
-	
