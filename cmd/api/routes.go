@@ -22,6 +22,17 @@ func (app *application) routes() http.Handler{
 		v1.DELETE("/events/:id/attendees/:userid",app.deleteAtendeeFromEvent) // Delete an attendee
 		v1.GET("/attendees/:id/events",app.getEventsByAttendee) //Print all events associated with an attendee (taking user id)
 		v1.GET("/events/:id/attendees",app.getAttendeesForEvent) //Print all attendees associated with an event
+		v1.POST("/auth/login",app.login)
+	}
+
+	authGroup:=v1.Group("/")
+	authGroup.Use(app.AuthMiddleware())
+	{
+		authGroup.POST("/events",app.createEvent)
+		authGroup.PUT("/events/:id",app.updateEvent) 
+		authGroup.DELETE("/events/:id",app.deleteEvent)
+		authGroup.POST("/events/:id/attendees/:userid",app.addAttendeeToEvent)
+		authGroup.DELETE("/events/:id/attendees/:userid",app.deleteAtendeeFromEvent)
 	}
 	return g
 }
