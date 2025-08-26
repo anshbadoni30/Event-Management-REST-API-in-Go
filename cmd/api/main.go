@@ -3,7 +3,7 @@ package main
 import (
 	"database/sql"
 	"log"
-
+	_ "github.com/anshbadoni30/event-management-app/docs"
 	"github.com/anshbadoni30/event-management-app/internal/database"
 	"github.com/anshbadoni30/event-management-app/internal/env"
 	_ "github.com/joho/godotenv/autoload"
@@ -15,6 +15,14 @@ type application struct {
 	jwtSecret string
 	models    database.Models
 }
+
+// @title Event Management System API
+// @version 1.0
+// @description A RestAPI in Go using Gin framework
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Enter your bearer token in the format **Bearer &lt;token&gt;**
 
 func main() {
 	db, err := sql.Open("sqlite3", "./data.db")
